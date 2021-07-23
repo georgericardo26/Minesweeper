@@ -1,0 +1,22 @@
+# specifc files
+setup.py
+db.sqlite3
+.DS_Store
+config.txt
+.vscode/*
+
+# directories
+env/
+venv/
+__pycache__/
+.idea/
+.vscode/
+.DS_Store/
+documents/
+**/client/node_modules/
+static/
+
+#all hidden without gitignore
+.*
+!.gitignore
+!.gitlab-ci.yml

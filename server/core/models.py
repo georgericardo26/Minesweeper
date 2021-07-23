@@ -37,17 +37,17 @@ class RowModel(models.Model):
     """
     This Model represent each board's row.
     """
-
-    board = models.ForeignKey(BoardModel, null=False, blank=False, related_name="board", on_delete=CASCADE)
+    index = models.IntegerField(null=True, blank=True)
+    board = models.ForeignKey(BoardModel, null=False, blank=False, related_name="rows", on_delete=CASCADE)
 
     def __repr__(self) -> str:
-        return f"<RowModel: {self.adj_mines}, IsSelected: {self.is_selected}>"
+        return f"<RowModel: {self.index} >"
 
 class SquareItemModel(models.Model):
     """
     This Model represent each board's place, containing attributes related to the item.
     """
-
+    index = models.IntegerField(null=True, blank=True)
     adj_mines = models.IntegerField(default=0)
     is_selected = models.BooleanField(default=False)
     is_mine = models.BooleanField(default=False)

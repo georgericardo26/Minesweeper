@@ -1,0 +1,197 @@
+"""
+Package: core
+Module : service.py
+Author : George Ricardo
+
+This module has been created to handle query objects using business logics and returns result to view.
+"""
+
+import random
+
+from django.db.models import F
+
+
+class MineSweeperBuild:
+    # The Main game's creations service.
+
+    __slots__ = ("board", "row_model", "square_model", "rows_obj", "square_item")
+
+    def __init__(self, level: int, BoardModel: "BoardModel", RowModel: "RowModel", SquareItemModel: "SquareItemModel") -> None:
+        self.row_model = RowModel
+        self.square_model = SquareItemModel
+
+        self.__create_board(level, BoardModel)
+        self.__create_rows(RowModel)
+        self.__create_square_item(SquareItemModel)
+        self.__create_mines()
+        self.__create_remaining_places()
+
+    def __create_board(self, level: int, BoardModel: "BoardModel") -> None:
+        self.board = BoardModel.objects.create(level=level)
+
+    def __create_rows(self, RowModel):
+        rows_size, cols_size = self.board.board_sizes
+        self.rows_obj = RowModel.objects.bulk_create([
+            RowModel(
+                index=index,
+                board=self.board
+            ) for index, _ in enumerate(range(rows_size))
+        ])
+    
+    def __create_square_item(self, SquareItemModel):
+        rows_size, cols_size = self.board.board_sizes
+        for row_obj in self.rows_obj:
+            SquareItemModel.objects.bulk_create([
+                SquareItemModel(
+                    index=index,
+                    row=row_obj,
+                    board=self.board
+                ) for index, _ in enumerate(range(cols_size))
+            ])
+    
+    def __create_mines(self) -> None:
+        rows_size, cols_size = self.board.board_sizes
+        number_of_places = self.board.number_of_places
+
+        # Todo: maybe put the percent as a constant
+        # percent/100 * number_of_places
+        number_of_mines = int((12/100) * number_of_places)
+        mines_inserted = 0
+
+        while mines_inserted <= number_of_mines:
+            row = random.randint(0, rows_size - 1)
+            col = random.randint(0, cols_size - 1)
+            
+            square_obj = self.square_model.objects.filter(index=col, row__index=row, board__id=self.board.id).first()
+
+            if square_obj and not square_obj.is_mine:
+                self.__add_mine(square_obj)
+                self.__add_adj_values(square_obj, row, col)
+                mines_inserted += 1
+    
+    def __add_mine(self, square_obj: "SquareItemModel") -> None:
+        square_obj.is_mine = True
+        square_obj.adj_mines = -1
+        square_obj.save()
+
+    def __add_adj_values(self, square_obj: "SquareItemModel", row: int, col: int) -> None:
+        # Method to add +1 to adjacent fields
+
+        for row_item in range(row-1, row+2):
+            square_obj_col_left = self.square_model.objects.filter(index=(col - 1), row__index=row_item, board__id=self.board.id).first()
+            square_obj_col_right = self.square_model.objects.filter(index=(col + 1), row__index=row_item, board__id=self.board.id).first()
+            
+            #check the left place
+            if square_obj_col_left and not square_obj_col_left.is_mine:
+                square_obj_col_left.adj_mines = F('adj_mines') + 1
+                square_obj_col_left.save()
+
+             #check the right place
+            if square_obj_col_right and not square_obj_col_right.is_mine:
+                square_obj_col_right.adj_mines = F('adj_mines') + 1
+                square_obj_col_right.save()
+
+        #check the top place
+        square_obj_row_top = self.square_model.objects.filter(index=col, row__index=(row + 1), board__id=self.board.id).first()
+        
+        #check the bottom place
+        square_obj_row_bottom = self.square_model.objects.filter(index=col, row__index=(row - 1), board__id=self.board.id).first()
+
+        if square_obj_row_top and not square_obj_row_top.is_mine:
+            square_obj_row_top.adj_mines = F('adj_mines') + 1
+            square_obj_row_top.save()
+        
+        if square_obj_row_bottom and not square_obj_row_bottom.is_mine:
+            square_obj_row_bottom.adj_mines = F('adj_mines') + 1
+            square_obj_row_bottom.save()
+
+    def __create_remaining_places(self):
+        self.board.square_remaining = self.board.number_of_places
+        self.board.save()              
+
+class MineSweeperAction:
+    # The Main game's actions service.
+
+    __slots__ = ("board", "row_model", "square_model")
+
+    def __init__(self, board_object: "BoardModel", RowModel: "RowModel", SquareItemModel: "SquareItemModel") -> None:
+        self.board = board_object
+        self.row_model = RowModel
+        self.square_model = SquareItemModel
+
+    def __check_valid_place(self, row: int, col: int) -> bool:
+        pass
+
+    def __check_is_mine(self, row: int, col: int) -> bool:
+        square_obj = self.square_model.objects.filter(index=col, row__index=row, board__id=self.board.id).first()
+
+        if square_obj:
+            return square_obj.is_mine
+        return False
+
+    def make_move(self, row: int, col: int) -> "BoardModel":
+
+        #If it is mine, select all mines and game over.
+        if self.__check_is_mine(row, col):
+            self.show_mines()
+            self.board.end_game = True
+            self.board.is_winner = False
+            self.board.save()
+            return self.board
+
+        #If it isn't mine, check its value    
+        self.make_depth_move(row, col)
+
+        return self.board
+
+    def make_depth_move(self, row: int, col: int) -> bool:
+
+        square_obj = self.square_model.objects.filter(
+            index=col, 
+            row__index=row, 
+            board__id=self.board.id).first()
+
+        if square_obj and not square_obj.is_selected:
+            self.board.spots_remaining = F('square_remaining') - 1
+            self.board.save()
+
+            square_obj.is_selected = True
+            square_obj.save()
+
+            if square_obj.is_mine:
+                return
+
+            if square_obj.adj_mines == 0:
+                for row_item in range(row-1, row+2):
+
+                    square_obj_col_left = self.square_model.objects.filter(index=(col - 1), row__index=row_item, board__id=self.board.id).first()
+                    square_obj_col_right = self.square_model.objects.filter(index=(col + 1), row__index=row_item, board__id=self.board.id).first()
+
+                    #check the left place
+                    if square_obj_col_left and not square_obj_col_left.is_selected:
+                        self.make_depth_move(row_item, col - 1)
+
+                    #check the right place
+                    if square_obj_col_right and not square_obj_col_right.is_selected:
+                        self.make_depth_move(row_item, col + 1)
+                
+                #check the top place
+                square_obj_row_top = self.square_model.objects.filter(index=col, row__index=(row + 1), board__id=self.board.id).first()
+                
+                #check the bottom place
+                square_obj_row_bottom = self.square_model.objects.filter(index=col, row__index=(row - 1), board__id=self.board.id).first()
+
+                if square_obj_row_top and not square_obj_row_top.is_selected:
+                    self.make_depth_move(row - 1, col)
+                
+                if square_obj_row_bottom and not square_obj_row_bottom.is_mine:
+                    self.make_depth_move(row + 1, col)
+                
+            return
+
+        return
+
+    def show_mines(self) -> None:
+        self.square_model.objects.filter(
+            is_mine=True, 
+            board__id=self.board.id).update(is_selected=True) 

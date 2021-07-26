@@ -13,9 +13,10 @@ class BoardModel(models.Model):
         2: "30x16" #Expert
     }
 
-    level = models.CharField(null=False, blank=False, max_length=5, choices=list(LEVELS.items()))
+    level = models.IntegerField(null=False, blank=False, max_length=5, choices=list(LEVELS.items()))
     end_game = models.BooleanField(default=False)
     is_winner = models.BooleanField(default=False)
+    square_remaining = models.IntegerField(null=True, blank=True)
 
     @property
     def selected_level(self):
@@ -42,6 +43,9 @@ class RowModel(models.Model):
 
     def __repr__(self) -> str:
         return f"<RowModel: {self.index} >"
+    
+    class Meta:
+        ordering = ["index"]
 
 class SquareItemModel(models.Model):
     """
@@ -53,7 +57,10 @@ class SquareItemModel(models.Model):
     is_mine = models.BooleanField(default=False)
     is_flaged = models.BooleanField(default=False)
     row = models.ForeignKey(RowModel, null=False, blank=False, related_name="square_items", on_delete=CASCADE)
+    board = models.ForeignKey(BoardModel, null=True, blank=True, related_name="square_items", on_delete=CASCADE)
     
     def __repr__(self) -> str:
         return f"<SquareItemModel: {self.adj_mines}, IsSelected: {self.is_selected}>"
-
+    
+    class Meta:
+        ordering = ["index"]

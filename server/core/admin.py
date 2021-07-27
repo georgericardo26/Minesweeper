@@ -5,7 +5,7 @@ from core.models import BoardModel, RowModel, SquareItemModel
 
 @admin.register(BoardModel)
 class BoardAdmin(admin.ModelAdmin):
-    list_display = ('id', 'level', 'end_game', 'is_winner', 'selected_level')
+    list_display = ('id', 'rows_number', 'cols_number', 'mines_number', 'end_game', 'is_winner', 'selected_level')
 
 @admin.register(RowModel)
 class RowAdmin(admin.ModelAdmin):

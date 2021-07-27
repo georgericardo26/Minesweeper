@@ -16,18 +16,18 @@ class MineSweeperBuild:
 
     __slots__ = ("board", "row_model", "square_model", "rows_obj", "square_item")
 
-    def __init__(self, level: int, BoardModel: "BoardModel", RowModel: "RowModel", SquareItemModel: "SquareItemModel") -> None:
+    def __init__(self, rows_number: int, cols_number:int, mines_number:int, BoardModel: "BoardModel", RowModel: "RowModel", SquareItemModel: "SquareItemModel") -> None:
         self.row_model = RowModel
         self.square_model = SquareItemModel
 
-        self.__create_board(level, BoardModel)
+        self.__create_board(rows_number, cols_number, mines_number, BoardModel)
         self.__create_rows(RowModel)
         self.__create_square_item(SquareItemModel)
         self.__create_mines()
         self.__create_remaining_places()
 
-    def __create_board(self, level: int, BoardModel: "BoardModel") -> None:
-        self.board = BoardModel.objects.create(level=level)
+    def __create_board(self, rows_number: int, cols_number:int, mines_number:int, BoardModel: "BoardModel") -> None:
+        self.board = BoardModel.objects.create(rows_number=rows_number, cols_number=cols_number, mines_number=mines_number)
 
     def __create_rows(self, RowModel):
         rows_size, cols_size = self.board.board_sizes
@@ -53,9 +53,7 @@ class MineSweeperBuild:
         rows_size, cols_size = self.board.board_sizes
         number_of_places = self.board.number_of_places
 
-        # Todo: maybe put the percent as a constant
-        # percent/100 * number_of_places
-        number_of_mines = int((12/100) * number_of_places)
+        number_of_mines = self.board.mines_number
         mines_inserted = 0
 
         while mines_inserted <= number_of_mines:
@@ -133,18 +131,18 @@ class MineSweeperAction:
 
         #If it is mine, select all mines and game over.
         if self.__check_is_mine(row, col):
-            self.show_mines()
+            self.__update_mines()
             self.board.end_game = True
             self.board.is_winner = False
             self.board.save()
             return self.board
 
         #If it isn't mine, check its value    
-        self.make_depth_move(row, col)
+        self.__make_depth_move(row, col)
 
         return self.board
 
-    def make_depth_move(self, row: int, col: int) -> bool:
+    def __make_depth_move(self, row: int, col: int) -> bool:
 
         square_obj = self.square_model.objects.filter(
             index=col, 
@@ -169,11 +167,11 @@ class MineSweeperAction:
 
                     #check the left place
                     if square_obj_col_left and not square_obj_col_left.is_selected:
-                        self.make_depth_move(row_item, col - 1)
+                        self.__make_depth_move(row_item, col - 1)
 
                     #check the right place
                     if square_obj_col_right and not square_obj_col_right.is_selected:
-                        self.make_depth_move(row_item, col + 1)
+                        self.__make_depth_move(row_item, col + 1)
                 
                 #check the top place
                 square_obj_row_top = self.square_model.objects.filter(index=col, row__index=(row + 1), board__id=self.board.id).first()
@@ -182,16 +180,32 @@ class MineSweeperAction:
                 square_obj_row_bottom = self.square_model.objects.filter(index=col, row__index=(row - 1), board__id=self.board.id).first()
 
                 if square_obj_row_top and not square_obj_row_top.is_selected:
-                    self.make_depth_move(row - 1, col)
+                    self.__make_depth_move(row - 1, col)
                 
                 if square_obj_row_bottom and not square_obj_row_bottom.is_mine:
-                    self.make_depth_move(row + 1, col)
+                    self.__make_depth_move(row + 1, col)
                 
             return
 
         return
 
-    def show_mines(self) -> None:
+    def __update_mines(self) -> None:
         self.square_model.objects.filter(
             is_mine=True, 
             board__id=self.board.id).update(is_selected=True) 
+
+    def set_or_remove_flag(self, row: int, col: int) -> "BoardModel":
+        square_obj = self.square_model.objects.filter(
+            index=col, 
+            row__index=row, 
+            board__id=self.board.id).first()
+        
+        if square_obj:
+            if square_obj.is_flaged:
+                square_obj.is_flaged = False
+            else:
+                square_obj.is_flaged = True
+            
+            square_obj.save()
+        
+        return self.board

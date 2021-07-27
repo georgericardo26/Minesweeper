@@ -7,6 +7,13 @@ from django.db.models.deletion import CASCADE
 from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    createAt = models.DateTimeField(auto_now_add=True, auto_created=True)
+    updateAt = models.DateTimeField(auto_now=True, auto_created=True)
+    isDeleted = models.BooleanField(null=False, default=False)
 
 
 class BoardModel(models.Model):

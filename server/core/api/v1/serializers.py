@@ -30,25 +30,36 @@ class RowSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
-    level = serializers.ChoiceField([0, 1, 2], required=True)
+
     rows = RowSerializer(many=True, read_only=True)
 
     class Meta:
         model = BoardModel
         fields = [
             "id",
-            "level",
+            "uuid",
+            "rows_number",
+            "cols_number",
+            "mines_number",
             "selected_level", 
             "end_game", 
             "is_winner", 
             "square_remaining",
+            "created_at",
             "rows"
             ]
-        read_only_fields = ["selected_level", "end_game", "is_winner", "square_remaining"]
+        read_only_fields = ["uuid", "selected_level", "end_game", "is_winner", "square_remaining", "created_at"]
+        extra_kwargs = {
+                "rows_number": {"required": True},
+                "cols_number": {"required": True},
+                "mines_number": {"required": True}
+            }
     
     def create(self, validated_data):
         board = MineSweeperBuild(
-            level=validated_data["level"], 
+            rows_number=validated_data["rows_number"], 
+            cols_number=validated_data["cols_number"], 
+            mines_number=validated_data["mines_number"], 
             BoardModel=BoardModel,
             RowModel=RowModel,
             SquareItemModel=SquareItemModel)

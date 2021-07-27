@@ -85,16 +85,6 @@ WSGI_APPLICATION = 'minesweeper.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "minesweeper",
-#         "USER": "minesweeper",
-#         "PASSWORD": "minesweeper",
-#         "HOST": "db_postgres",
-#         "PORT": 5432,
-#     }
-# }
 
 DATABASES = {
     "default": {
@@ -141,6 +131,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# CONSTANTS
+MAX_LIMIT_TIME_SECONDS = 1000
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,24 +1,40 @@
 from django.shortcuts import render
-
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.exceptions import MethodNotAllowed, ValidationError
 
-from core.models import BoardModel, RowModel, SquareItemModel
-from core.api.v1.serializers import BoardSerializer, MineSweeperActionSerializer
+from core.models import BoardModel, RowModel, SquareItemModel, User
+from core.api.v1.serializers import BoardSerializer, MineSweeperActionSerializer, UserSerializer
 from core.api.v1.service import MineSweeperAction
+from core.api.v1.permissions import MineSweeperUpdatePermission
+
+
+class UserCreateView(generics.CreateAPIView):
+    #View to create a new user
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
+    #View to retrieve and update a user
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class MineSweeperCreateView(generics.CreateAPIView):
     #View to create the board
     queryset = BoardModel.objects.all()
     serializer_class = BoardSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class MineSweeperRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     #View to make move from an alread created board
     queryset = BoardModel.objects.all()
     serializer_class = MineSweeperActionSerializer
+    permission_classes = [permissions.IsAuthenticated, MineSweeperUpdatePermission]
 
     def update(self, request, *args, **kwargs):
         serializer_input = self.serializer_class(data=request.data)
@@ -42,6 +58,7 @@ class MineSweeperSquareItemModelFlagUpdateView(generics.UpdateAPIView):
     #View to add or remove flag to/from square item
     queryset = BoardModel.objects.all()
     serializer_class = MineSweeperActionSerializer
+    permission_classes = [permissions.IsAuthenticated, MineSweeperUpdatePermission]
 
     def update(self, request, *args, **kwargs):
         serializer_input = self.serializer_class(data=request.data)
@@ -54,8 +71,6 @@ class MineSweeperSquareItemModelFlagUpdateView(generics.UpdateAPIView):
                 col=request.data["col"])
 
             serializer_board = BoardSerializer(instance=board_instance)
-
-            # raise Exception("testing...", board_instance)
 
             return Response(data=serializer_board.data, status=200)
 

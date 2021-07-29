@@ -20,7 +20,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('game/', include('core.api.v1.urls', namespace='game')),
+    path('users/', include('core.api.v1.urls.urls_user', namespace='user')),
+    path('auth/', include('auth.urls', namespace='authentication')),
+    path('game/', include('core.api.v1.urls.urls_game', namespace='game')),
     re_path('swagger/', schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
     re_path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),

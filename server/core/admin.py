@@ -1,7 +1,11 @@
 from django.contrib import admin
 
-from core.models import BoardModel, RowModel, SquareItemModel
+from core.models import User, BoardModel, RowModel, SquareItemModel
 
+
+@admin.register(User)
+class BoardAdmin(admin.ModelAdmin):
+    list_display = ('id', 'first_name', 'email', 'last_name', 'is_staff')
 
 @admin.register(BoardModel)
 class BoardAdmin(admin.ModelAdmin):

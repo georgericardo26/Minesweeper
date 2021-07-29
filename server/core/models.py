@@ -1,12 +1,18 @@
 import uuid
-import datetime
 
 from functools import reduce
 from django.db import models
 from django.db.models.deletion import CASCADE
 from django.utils import timezone
 from django.conf import settings
-from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError, PermissionDenied
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    createAt = models.DateTimeField(auto_now_add=True, auto_created=True)
+    updateAt = models.DateTimeField(auto_now=True, auto_created=True)
+    isDeleted = models.BooleanField(null=False, default=False)
 
 
 class BoardModel(models.Model):
@@ -33,6 +39,11 @@ class BoardModel(models.Model):
     @property
     def number_of_places(self):
         return reduce((lambda x, y: x * y), self.board_sizes)
+
+    @property
+    def is_expired(self):
+        time = timezone.now() - self.created_at
+        return time.seconds > settings.MAX_LIMIT_TIME_SECONDS
 
     def __repr__(self) -> str:
         return f"<BoardModel: IsWinner: {self.is_winner}, EndGame: {self.end_game} >"
@@ -68,11 +79,22 @@ class SquareItemModel(models.Model):
     class Meta:
         ordering = ["index"]
 
-    def clean(self) -> None:
-        time = timezone.now() - self.board.created_at
+    # def clean(self) -> None:
+    #     time = timezone.now() - self.board.created_at
 
-        #If the time is expired, finish the game and raise exception
-        if time.seconds > settings.MAX_LIMIT_TIME_SECONDS:
-            self.board.end_game = True
-            self.board.save()
-            raise ValidationError("Expired time to finish the game")
+    #     #If the time is expired, finish the game and raise exception
+    #     # if time.seconds > settings.MAX_LIMIT_TIME_SECONDS:
+    #     if time.seconds > 50:
+    #         self.board.end_game = True
+    #         self.board.save()
+    #         raise PermissionDenied("Expired time to finish the game")
+
+    # def save(self, *args, **kwargs):
+    #     self.full_clean()
+    #     # raise Exception("testing")
+    #     # try:
+    #     #     self.full_clean()
+    #     # except ValidationError as e:
+    #     #     non_field_errors = e.message_dict[NON_FIELD_ERRORS]
+
+    #     super(SquareItemModel, self).save(*args, **kwargs)

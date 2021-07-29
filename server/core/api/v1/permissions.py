@@ -1,3 +1,10 @@
+"""
+Package: core
+Module : permissions.py
+Author : George Ricardo
+
+This module has been created to handle request permissions.
+"""
 from rest_framework import permissions
 
 class MineSweeperUpdatePermission(permissions.BasePermission):

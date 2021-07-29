@@ -1,3 +1,10 @@
+"""
+Package: core
+Module : views.py
+Author : George Ricardo
+
+This module has been created to handle request and return a response.
+"""
 from django.shortcuts import render
 from rest_framework import generics, permissions
 from rest_framework.response import Response

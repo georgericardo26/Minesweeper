@@ -5,7 +5,6 @@ Author : George Ricardo
 
 This module has been created to handle query objects using business logics and returns result to view.
 """
-
 import random
 
 from django.db.models import F
@@ -20,6 +19,7 @@ class MineSweeperBuild:
         self.row_model = RowModel
         self.square_model = SquareItemModel
 
+        # Performs methods to create board, rows and squires
         self.__create_board(rows_number, cols_number, mines_number, BoardModel)
         self.__create_rows(RowModel)
         self.__create_square_item(SquareItemModel)

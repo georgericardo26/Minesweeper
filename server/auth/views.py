@@ -1,3 +1,10 @@
+"""
+Package: auth
+Module : views.py
+Author : George Ricardo
+
+This module has been created to handle request and return a response from Authentication resource.
+"""
 import json
 
 from django.conf import settings

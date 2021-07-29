@@ -1,3 +1,11 @@
+"""
+Package: core
+Module : models.py
+Author : George Ricardo
+
+This module has been created to handle data models coming from database.
+"""
+
 import uuid
 
 from functools import reduce

@@ -1,9 +1,34 @@
 from django.db.models import fields
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from core.api.v1.service import MineSweeperBuild
 from core.models import BoardModel, RowModel, SquareItemModel
 
+
+User = get_user_model()
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "password",
+            "email",
+            "first_name",
+            "last_name"
+        ]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+
+        user = User(**validated_data)
+        user.set_password(user.password)
+        user.is_staff = True
+        user.save()
+
+        return user
 
 
 class SquareItemSerializer(serializers.ModelSerializer):

@@ -120,6 +120,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTH APP
+AUTH_USER_SERIALIZER = "core.api.v1.serializers.UserSerializer"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

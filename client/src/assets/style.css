@@ -194,9 +194,40 @@ body {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .game {
   margin-top: 15vw;
+  background-color: #C6C6C6;
+  width: fit-content;
+  padding: 10px;
+  border: outset 6px #fff;
 }
-.game .board {
-  border: solid 4px var(--grey-strong);
+.game .game-header {
+  margin-bottom: 7px;
+  border: inset 4px #e0e0e0;
+}
+.game .game-header .panel-score-box, .panel-time-box {
+  width: 61.5px;
+  height: 37.5px;
+  background-image: url('./img/nums_background.svg');
+  background-size: 61.5px 37.5px;
+}
+.game .game-header .panel-score-box {
+  float: left;
+}
+.game .game-header .panel-time-box {
+  float: right;
+}
+.game .game-header .control-button {
+  margin: 0 auto;
+  width: 39px;
+  height: 39px;
+}
+.game .game-header .control-button .control-face-normal {
+  height: 100%;
+  background-image: url('img/face_unpressed.svg');
+  background-size: 100% 100%;
+}
+.game .game-content {
+  border: inset 4px #e0e0e0;
+  width: fit-content;
 }
 .game .board tr {
   height: 24px;

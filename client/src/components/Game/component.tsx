@@ -7,7 +7,25 @@ export default function GameComponent() {
         <div className="container">
             <div className="game">
                 <div className="game-header">
-                    skldklsd
+                    <div className="row">
+                        <div className="col-md-4">
+                            <div className="panel-score-box">
+                                
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="control-button">
+                                <div className="control-face-normal">
+                                &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="panel-time-box">
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="game-content">
                     <table className="board">
@@ -38,6 +56,27 @@ export default function GameComponent() {
                                     <div className="flag">&nbsp;</div>
                                     <div className="pattern">&nbsp;</div>
                                     <div className="value"><span className="color-adj-1">1</span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
                                 </div>
                             </td>
                             <td>
@@ -99,6 +138,27 @@ export default function GameComponent() {
                                     <div className="value"><span className="color-adj-0"></span></div>
                                 </div>
                             </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -140,7 +200,29 @@ export default function GameComponent() {
                                     <div className="mine">&nbsp;</div>
                                 </div>
                             </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell">
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="value"><span className="color-adj-0"></span></div>
+                                </div>
+                            </td>
                         </tr>
+
                     </table>
                 </div>
             </div>

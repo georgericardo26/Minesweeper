@@ -3,6 +3,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
+@font-face {
+  font-family: digital-clock;
+  src: url(./fonts/Digital_Dismay.otf);
+}
+
 :root {
   --page-header-bgColor: #242e42;
   --page-header-bgColor-hover: #1d2636;
@@ -212,6 +217,15 @@ body {
 .game .game-header .panel-score-box {
   float: left;
 }
+.game .game-header .panel-score-box span, .panel-time-box span {
+  font-family: digital-clock;
+  font-size: 46px;
+  position: absolute;
+  margin-left: 1px;
+  font-weight: 400;
+  color: red;
+  margin-top: -15px;
+}
 .game .game-header .panel-time-box {
   float: right;
 }
@@ -220,10 +234,26 @@ body {
   width: 39px;
   height: 39px;
 }
+.game .game-header .control-button:active {
+  transform: scale(0.95);
+}
 .game .game-header .control-button .control-face-normal {
   height: 100%;
-  background-image: url('img/face_unpressed.svg');
   background-size: 100% 100%;
+  cursor: pointer;
+  background-image: url('img/face_unpressed.svg');
+}
+.game .game-header .control-button .control-face-lose {
+  height: 100%;
+  background-size: 100% 100%;
+  cursor: pointer;
+  background-image: url('img/face_lose.svg');
+}
+.game .game-header .control-button .control-face-win {
+  height: 100%;
+  background-size: 100% 100%;
+  cursor: pointer;
+  background-image: url('img/face_win.svg');
 }
 .game .game-content {
   border: inset 4px #e0e0e0;
@@ -240,8 +270,9 @@ body {
 }
 .game .board tr td .cell {
   width: 24px;
+  cursor: pointer;
 }
-.game .board tr td .cell .flag, .pattern, .value { 
+.game .board tr td .cell .flag, .pattern, .value, .mine { 
   text-align: center;
   position: absolute;
   margin-top: -12px;
@@ -267,9 +298,10 @@ body {
   display: block;
 }
 .game .board tr td .cell .mine {
+  z-index: 9;
   background-image: url('./img/mine.svg');
   background-size: 24px 24px;
-  display: none;
+  display: block;
 }
 .game .board tr td .cell .mine_red {
   background-image: url('./img/mine_red.svg');

@@ -43,11 +43,11 @@ const RequestGet = async (requestData: IRequestData)  => {
   }
 }
 
-const RequestPatch = async (requestData: IRequestData)  => {
+const RequestPut = async (requestData: IRequestData)  => {
 
   try {
     
-    let response = await axios.patch(requestData.url, requestData.bodyData, requestData.header);
+    let response = await axios.put(requestData.url, requestData.bodyData, requestData.header);
 
     return {
       status: response.status, 
@@ -85,4 +85,4 @@ const RequestDelete = async (requestData: IRequestData)  => {
 }
 
 
-export { RequestPost, RequestGet, RequestPatch, RequestDelete }
+export { RequestPost, RequestGet, RequestPut, RequestDelete }

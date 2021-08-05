@@ -474,3 +474,49 @@ body {
   .sign-up-page .form-content .sign-up-form .sign-up-button:disabled {
     background-color: var(--light-grey);
   }
+
+   /* HOME PAGE 
+  ----------------------------------------------- */
+  .home-page {
+    padding: 90px 0px;
+    width: 35vw;
+    margin: 0 auto;
+  }
+  .home-page .form-content .title-content {
+    border-bottom: solid 1px var(--strong-blue);
+    margin-bottom: 15px;
+  }
+  .home-page .form-content .title-content h2{
+    text-align: left;
+    font-size: 23px;
+    font-weight: bold;
+    color: var(--strong-blue);
+  }
+  .home-page .form-content .new-game-form  {
+    padding: 20px;
+  }
+  .home-page .form-content .new-game-form .form-group {
+    margin-bottom: 2rem;
+  }
+  .home-page .form-content .new-game-form .form-group .form-control {
+    background: var(--light-grey);
+    border: none;
+    border-radius: 10px;
+    margin-top: 20px;
+    height: 30px;
+  }
+
+  .home-page .form-content .new-game-form .new-game-button {
+    display: block;
+    width: 100%;
+    background-color: var(--strong-blue);
+    color: var(--white);
+    border-radius: 10px;
+    height: 35px;
+  }
+  .home-page .form-content .new-game-form .new-game-button:hover {
+    background-color: var(--light-blue);
+  }
+  .home-page .form-content .new-game-form  .new-game-button:disabled {
+    background-color: var(--light-grey);
+  }

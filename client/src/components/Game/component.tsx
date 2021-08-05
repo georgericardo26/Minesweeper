@@ -1,10 +1,13 @@
 import React, {useEffect, useCallback} from 'react'
 import { HeaderComponent } from '../Main/components/component'
 import CountUp from 'react-countup';
+import { TypeGameOBJ } from '../../interfaces/defaults';
 
-export default function GameComponent() {
+export default function GameComponent(props: TypeGameOBJ) {
 
-    const [seconds, setSeconds] = React.useState(0);
+    const [seconds, setSeconds] = React.useState("000");
+    const { errorDisplay, gameData } = props;
+
     const ClickEffectFace = useCallback((event) => {
 
     }, []);
@@ -44,10 +47,32 @@ export default function GameComponent() {
     }, []);
 
     useEffect(() => {
-        if (seconds < 999) {
-          setTimeout(() => setSeconds(seconds + 1), 1000);
-        } else {
-          setSeconds(0);
+
+        if(gameData && gameData.created_at) {
+
+            let secondBetweenTwoDate = Math.floor((new Date().getTime() - new Date(gameData.created_at).getTime()) / 1000);
+            setSeconds(`${secondBetweenTwoDate}`);
+
+            if (parseInt(seconds) < 999) {
+                let seconds_n = parseInt(seconds)
+                let seconds_s;
+    
+                setTimeout(() => {
+                    seconds_n += 1;
+                    if(seconds_n < 10){
+                        return setSeconds("00"+seconds_n);
+                    }
+                    if(seconds_n >= 10 && seconds_n < 100){
+                        return setSeconds("0"+seconds_n);  
+                    }
+                    return setSeconds(`${seconds_n}`);  
+                }, 1000);
+            } else {
+              setSeconds("000");
+            }
+        }
+        else {
+            setSeconds("000");
         }
     });
 
@@ -63,9 +88,19 @@ export default function GameComponent() {
                         </div>
                         <div className="col-md-4">
                             <div className="control-button">
-                                <div className="control-face control-face-normal">
-                                    &nbsp;
-                                </div>
+                                {(gameData.end_game && !gameData.is_winner)?
+                                    <div className="control-face control-face-lose">
+                                        &nbsp;
+                                    </div>: 
+                                (gameData.end_game && gameData.is_winner) ?
+                                    <div className="control-face control-face-win">
+                                        &nbsp;
+                                    </div> :
+                                    <div className="control-face control-face-normal">
+                                        &nbsp;
+                                    </div>
+                                }
+                               
                             </div>
                         </div>
                         <div className="col-md-4">
@@ -102,8 +137,6 @@ export default function GameComponent() {
                                     </div>
                                 </div>
                             </td>
-                            
-                           
                            
                         </tr>
                     </table>

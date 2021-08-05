@@ -47,10 +47,18 @@ export default function SignInContainer(){
 
                 if (response.status === 200) {
                     setErrorDisplay(false);
+
                     setCookie('user', response.data, {
                         expires: new Date(Date.now() + response.data.expires_in)
                     });
-                    window.location.href = "/game";
+                    
+                    //Identify the previous page
+                    if(document.referrer.includes("game")){
+                        window.history.back()
+                    }
+                    else {
+                        window.location.href = "/";
+                    }
                 }
                 else {
                     setErrorDisplay(true);

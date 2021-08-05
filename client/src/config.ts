@@ -3,7 +3,8 @@ export default {
       URL: "http://localhost/api/v1/",
       RESOURCES: {
         AUTH_TOKEN: "auth/token/",
-        USER: "users/"
+        USER: "users/",
+        GAME: "game/"
       }
     }
 }

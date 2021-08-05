@@ -67,7 +67,7 @@ class BoardSerializer(serializers.ModelSerializer):
             "cols_number",
             "mines_number",
             "selected_level", 
-            "end_game", 
+            "end_game",
             "is_winner", 
             "square_remaining",
             "created_at",

@@ -43,6 +43,11 @@ class MineSweeperRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = MineSweeperActionSerializer
     permission_classes = [permissions.IsAuthenticated, MineSweeperUpdatePermission]
 
+    def retrieve(self, request, *args, **kwargs):
+        board_obj = self.get_object()
+        serializer_board = BoardSerializer(instance=board_obj)
+        return Response(data=serializer_board.data, status=200)
+
     def update(self, request, *args, **kwargs):
         serializer_input = self.serializer_class(data=request.data)
         if serializer_input.is_valid():

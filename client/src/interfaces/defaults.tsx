@@ -57,11 +57,38 @@ export type ISignUpSucess = {
 
 export type TypeGameOBJ = {
     errorDisplay?: boolean,
-    gameData?: any
+    gameData?: any,
+    squareRemaining?: string,
+    requestCreateNewGame: () => void,
+    isExpired: boolean,
+    setIsExpired: any
 }
 
 export type TypeCreateGame = {
     rows_number?: number,
     cols_number?: number,
     mines_number?: number
+}
+
+export type TypeSquare = {
+    index: number,
+    adj_mines: number,
+    is_selected: boolean,
+    is_mine: boolean,
+    is_flaged: boolean,
+    row: number,
+    board: number
+}
+
+export type TypeGameDataResponse = {
+    id?: number,
+    uuid?: string,
+    rows_number?: number,
+    cols_number?: number,
+    mines_number?: number,
+    end_game?: boolean,
+    is_winner?: boolean,
+    square_remaining?: number,
+    created_at?: string,
+    rows?: [any]
 }

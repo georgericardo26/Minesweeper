@@ -1,18 +1,16 @@
 import React, {useEffect, useCallback} from 'react'
 import { HeaderComponent } from '../Main/components/component'
 import CountUp from 'react-countup';
-import { TypeGameOBJ } from '../../interfaces/defaults';
+import { TypeGameDataResponse, TypeGameOBJ, TypeSquare } from '../../interfaces/defaults';
 
 export default function GameComponent(props: TypeGameOBJ) {
 
     const [seconds, setSeconds] = React.useState("000");
-    const { errorDisplay, gameData } = props;
+    const [ localGameData, setLocalGameData ] = React.useState<TypeGameDataResponse>({})
+    const { errorDisplay, gameData, squareRemaining, requestCreateNewGame, isExpired, setIsExpired } = props;
 
-    const ClickEffectFace = useCallback((event) => {
 
-    }, []);
-
-    const ClickEffect = useCallback((event) => {
+    const ClickEffect = useCallback((event, row, col) => {
         event.preventDefault();
         let className = event.target.className;
 
@@ -46,35 +44,47 @@ export default function GameComponent(props: TypeGameOBJ) {
         
     }, []);
 
+    // const updateGameData = useCallback(()=>{
+    //     setLocalGameData(gameData);
+    // }, [gameData])
+
     useEffect(() => {
 
-        if(gameData && gameData.created_at) {
+        //Update the gameData inserting it to a state variable
+        //updateGameData();
+
+        if(gameData && !gameData.is_expired && !gameData.end_game && !isExpired) {
 
             let secondBetweenTwoDate = Math.floor((new Date().getTime() - new Date(gameData.created_at).getTime()) / 1000);
-            setSeconds(`${secondBetweenTwoDate}`);
 
-            if (parseInt(seconds) < 999) {
-                let seconds_n = parseInt(seconds)
+            if (secondBetweenTwoDate < 999) {
+                let seconds_n = secondBetweenTwoDate;
                 let seconds_s;
     
                 setTimeout(() => {
                     seconds_n += 1;
                     if(seconds_n < 10){
-                        return setSeconds("00"+seconds_n);
+                        seconds_s = `00${seconds_n}`
                     }
-                    if(seconds_n >= 10 && seconds_n < 100){
-                        return setSeconds("0"+seconds_n);  
+                    else if(seconds_n >= 10 && seconds_n < 100){
+                         seconds_s = `0${seconds_n}`
                     }
-                    return setSeconds(`${seconds_n}`);  
+                    else {
+                        seconds_s = `${seconds_n}`
+                    }
+                 
+                    return setSeconds(seconds_s);  
                 }, 1000);
-            } else {
-              setSeconds("000");
+            } 
+            else {
+                setSeconds("000");
+                setIsExpired(true);
             }
         }
         else {
             setSeconds("000");
         }
-    });
+    }, [gameData]);
 
     return (
         <div className="container">
@@ -83,11 +93,11 @@ export default function GameComponent(props: TypeGameOBJ) {
                     <div className="row">
                         <div className="col-md-4">
                             <div className="panel-score-box">
-                                <span>000</span>
+                                <span>{squareRemaining}</span>
                             </div>
                         </div>
                         <div className="col-md-4">
-                            <div className="control-button">
+                            <div className="control-button" onClick={()=>(requestCreateNewGame())}>
                                 {(gameData.end_game && !gameData.is_winner)?
                                     <div className="control-face control-face-lose">
                                         &nbsp;
@@ -112,7 +122,51 @@ export default function GameComponent(props: TypeGameOBJ) {
                 </div>
                 <div className="game-content">
                     <table className="board">
-                        <tr>
+                        <tbody>
+
+                            {
+                                (gameData && gameData.rows)?
+                                    gameData.rows.map((row: any)=>(
+                                        <tr>
+                                            {row.square_items.map((square:TypeSquare)=>(
+                                                <td>
+                                                    <div className="cell"
+                                                    key={`${row.index},${square.index}`} 
+                                                    onClick={(event) => ClickEffect(event, row.index, square.index)} 
+                                                    onContextMenu={(event) => ClickEffect(event, row.index, square.index)}
+                                                    >
+
+                                                        <div className="flag" style={(square.is_flaged && !square.is_selected)? {display: "block"} : {display: "none"}}>&nbsp;</div>
+                                                        <div className="pattern" style={(square.is_selected)? {display: "none"} : {display: "block"}}>&nbsp;</div>
+                                                        {
+                                                            (square.is_mine)? 
+                                                            <div className="spot-item mine">
+                                                                &nbsp;
+                                                            </div>
+                                                            : 
+                                                            <div className="spot-item value">
+                                                                {
+                                                                    (square.adj_mines == 0)? "" :
+                                                                    (square.adj_mines == 1)? <span className="color-adj-1">{square.adj_mines}</span> :
+                                                                    (square.adj_mines == 2)? <span className="color-adj-2">{square.adj_mines}</span> :
+                                                                    (square.adj_mines == 3)? <span className="color-adj-3">{square.adj_mines}</span> :
+                                                                    <span className="color-adj-4">{square.adj_mines}</span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            ))}
+                                        </tr>
+                                )) : 
+                                <tr>
+                                    <td key="error">Error trying to process the request</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                        
+                        {/* <tr>
                             <td>
                                 <div className="cell" 
                                     onClick={(event) => ClickEffect(event)} 
@@ -138,7 +192,7 @@ export default function GameComponent(props: TypeGameOBJ) {
                                 </div>
                             </td>
                            
-                        </tr>
+                        </tr> */}
                     </table>
                 </div>
             </div>

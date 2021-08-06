@@ -70,6 +70,7 @@ class BoardSerializer(serializers.ModelSerializer):
             "end_game",
             "is_winner", 
             "square_remaining",
+            "is_expired",
             "created_at",
             "rows"
             ]

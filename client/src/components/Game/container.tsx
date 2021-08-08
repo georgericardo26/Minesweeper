@@ -100,7 +100,8 @@ export default function GameContainer(){
 
     useEffect(() => {
         requestRetrieveGame();
-    }, [])
+        console.log(gameData);
+    }, [requestRetrieveGame])
 
     if(cookies && cookies.user){
         return (

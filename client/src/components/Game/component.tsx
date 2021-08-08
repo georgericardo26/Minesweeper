@@ -5,10 +5,9 @@ import { TypeGameDataResponse, TypeGameOBJ, TypeSquare } from '../../interfaces/
 
 export default function GameComponent(props: TypeGameOBJ) {
 
-    const [seconds, setSeconds] = React.useState("000");
-    const [ localGameData, setLocalGameData ] = React.useState<TypeGameDataResponse>({})
+    const [seconds, setSeconds] = React.useState(0);
     const { errorDisplay, gameData, squareRemaining, requestCreateNewGame, isExpired, setIsExpired } = props;
-
+    // const [ localGameData, setLocalGameData ] = React.useState<TypeGameDataResponse>(gameData);
 
     const ClickEffect = useCallback((event, row, col) => {
         event.preventDefault();
@@ -44,47 +43,21 @@ export default function GameComponent(props: TypeGameOBJ) {
         
     }, []);
 
-    // const updateGameData = useCallback(()=>{
-    //     setLocalGameData(gameData);
-    // }, [gameData])
-
     useEffect(() => {
-
-        //Update the gameData inserting it to a state variable
-        //updateGameData();
-
-        if(gameData && !gameData.is_expired && !gameData.end_game && !isExpired) {
-
-            let secondBetweenTwoDate = Math.floor((new Date().getTime() - new Date(gameData.created_at).getTime()) / 1000);
-
-            if (secondBetweenTwoDate < 999) {
-                let seconds_n = secondBetweenTwoDate;
-                let seconds_s;
-    
-                setTimeout(() => {
-                    seconds_n += 1;
-                    if(seconds_n < 10){
-                        seconds_s = `00${seconds_n}`
-                    }
-                    else if(seconds_n >= 10 && seconds_n < 100){
-                         seconds_s = `0${seconds_n}`
-                    }
-                    else {
-                        seconds_s = `${seconds_n}`
-                    }
-                 
-                    return setSeconds(seconds_s);  
-                }, 1000);
-            } 
-            else {
-                setSeconds("000");
-                setIsExpired(true);
+        if (seconds < 999) {
+            if(gameData && gameData.created_at && !isExpired) {
+                let secondBetweenTwoDate = Math.floor((new Date().getTime() - new Date(gameData.created_at).getTime()) / 1000);
+                secondBetweenTwoDate += 1;
+                setTimeout(() => setSeconds(secondBetweenTwoDate), 1000);
             }
+            else {
+                setSeconds(0);
+            }
+        } else {
+          setSeconds(0);
+          setIsExpired(true);
         }
-        else {
-            setSeconds("000");
-        }
-    }, [gameData]);
+    });
 
     return (
         <div className="container">
@@ -165,34 +138,6 @@ export default function GameComponent(props: TypeGameOBJ) {
                             }
 
                         </tbody>
-                        
-                        {/* <tr>
-                            <td>
-                                <div className="cell" 
-                                    onClick={(event) => ClickEffect(event)} 
-                                    onContextMenu={(event) => ClickEffect(event)}
-                                >
-                                    <div className="flag">&nbsp;</div>
-                                    <div className="pattern">&nbsp;</div>
-                                    <div className="spot-item value">
-                                        <span className="color-adj-1"></span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div className="cell" 
-                                    onClick={(event) => ClickEffect(event)} 
-                                    onContextMenu={(event) => ClickEffect(event)}
-                                >
-                                    <div className="flag">&nbsp;</div>
-                                    <div className="pattern">&nbsp;</div>
-                                    <div className="mine">
-                                     &nbsp;
-                                    </div>
-                                </div>
-                            </td>
-                           
-                        </tr> */}
                     </table>
                 </div>
             </div>

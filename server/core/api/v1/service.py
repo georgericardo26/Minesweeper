@@ -149,6 +149,8 @@ class MineSweeperAction:
     def update_board_expired_time(self) -> "BoardModel":
         #Select all squires because the game is over
         self.square_model.objects.all().update(is_selected=True) 
+        self.board.end_game = True
+        self.board.save()
         return self.board
         
 

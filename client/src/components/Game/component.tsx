@@ -152,34 +152,6 @@ export default function GameComponent(props: TypeGameOBJ) {
                             }
 
                         </tbody>
-                        
-                        {/* <tr>
-                            <td>
-                                <div className="cell" 
-                                    onClick={(event) => ClickEffect(event)} 
-                                    onContextMenu={(event) => ClickEffect(event)}
-                                >
-                                    <div className="flag">&nbsp;</div>
-                                    <div className="pattern">&nbsp;</div>
-                                    <div className="spot-item value">
-                                        <span className="color-adj-1"></span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div className="cell" 
-                                    onClick={(event) => ClickEffect(event)} 
-                                    onContextMenu={(event) => ClickEffect(event)}
-                                >
-                                    <div className="flag">&nbsp;</div>
-                                    <div className="pattern">&nbsp;</div>
-                                    <div className="mine">
-                                     &nbsp;
-                                    </div>
-                                </div>
-                            </td>
-                           
-                        </tr> */}
                     </table>
                 </div>
             </div>

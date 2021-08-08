@@ -5,9 +5,9 @@ import { TypeGameDataResponse, TypeGameOBJ, TypeSquare } from '../../interfaces/
 
 export default function GameComponent(props: TypeGameOBJ) {
 
-    const [seconds, setSeconds] = React.useState(0);
+    const [seconds, setSeconds] = React.useState("000");
     const { errorDisplay, gameData, squareRemaining, requestCreateNewGame, isExpired, setIsExpired } = props;
-    // const [ localGameData, setLocalGameData ] = React.useState<TypeGameDataResponse>(gameData);
+    const [ localGameData, setLocalGameData ] = React.useState<TypeGameDataResponse>(gameData);
 
     const ClickEffect = useCallback((event, row, col) => {
         event.preventDefault();
@@ -44,17 +44,31 @@ export default function GameComponent(props: TypeGameOBJ) {
     }, []);
 
     useEffect(() => {
-        if (seconds < 999) {
+        if (parseInt(seconds) < 999) {
+
             if(gameData && gameData.created_at && !isExpired) {
                 let secondBetweenTwoDate = Math.floor((new Date().getTime() - new Date(gameData.created_at).getTime()) / 1000);
                 secondBetweenTwoDate += 1;
-                setTimeout(() => setSeconds(secondBetweenTwoDate), 1000);
+                let seconds_string:string;
+
+                if(secondBetweenTwoDate < 10){
+                    seconds_string = `00${secondBetweenTwoDate}`
+                }
+                else if(secondBetweenTwoDate >= 10 && secondBetweenTwoDate < 100){
+                    seconds_string = `0${secondBetweenTwoDate}`
+                }
+                else {
+                    seconds_string = `${secondBetweenTwoDate}`
+                }
+                
+                setTimeout(() => setSeconds(seconds_string), 1000);
             }
             else {
-                setSeconds(0);
+                setSeconds("000");
             }
+
         } else {
-          setSeconds(0);
+          setSeconds("000");
           setIsExpired(true);
         }
     });
@@ -138,6 +152,34 @@ export default function GameComponent(props: TypeGameOBJ) {
                             }
 
                         </tbody>
+                        
+                        {/* <tr>
+                            <td>
+                                <div className="cell" 
+                                    onClick={(event) => ClickEffect(event)} 
+                                    onContextMenu={(event) => ClickEffect(event)}
+                                >
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="spot-item value">
+                                        <span className="color-adj-1"></span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="cell" 
+                                    onClick={(event) => ClickEffect(event)} 
+                                    onContextMenu={(event) => ClickEffect(event)}
+                                >
+                                    <div className="flag">&nbsp;</div>
+                                    <div className="pattern">&nbsp;</div>
+                                    <div className="mine">
+                                     &nbsp;
+                                    </div>
+                                </div>
+                            </td>
+                           
+                        </tr> */}
                     </table>
                 </div>
             </div>

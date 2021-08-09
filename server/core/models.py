@@ -86,23 +86,3 @@ class SquareItemModel(models.Model):
     
     class Meta:
         ordering = ["index"]
-
-    # def clean(self) -> None:
-    #     time = timezone.now() - self.board.created_at
-
-    #     #If the time is expired, finish the game and raise exception
-    #     # if time.seconds > settings.MAX_LIMIT_TIME_SECONDS:
-    #     if time.seconds > 50:
-    #         self.board.end_game = True
-    #         self.board.save()
-    #         raise PermissionDenied("Expired time to finish the game")
-
-    # def save(self, *args, **kwargs):
-    #     self.full_clean()
-    #     # raise Exception("testing")
-    #     # try:
-    #     #     self.full_clean()
-    #     # except ValidationError as e:
-    #     #     non_field_errors = e.message_dict[NON_FIELD_ERRORS]
-
-    #     super(SquareItemModel, self).save(*args, **kwargs)

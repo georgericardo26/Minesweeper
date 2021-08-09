@@ -68,6 +68,55 @@ export default function GameContainer(){
 
     }, [gameData]);
 
+    const requestAddRemoveFlagGame = useCallback((row, col) => {
+        (async function(row, col) {
+             // Build URL
+             let url = configData.MINE_SWEEPER_API.URL;
+             url += `${configData.MINE_SWEEPER_API.RESOURCES.GAME}${id}/flag`;
+ 
+             const response = await RequestPut({url: url,
+                 bodyData: {
+                     row: row,
+                     col: col
+                 }, 
+                 header: {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${cookies.user.access_token}`
+                     }
+                 } 
+             });
+
+             if (response.status == 200){
+                setGameData(response.data);
+             }
+        })(row, col)
+    }, []);
+
+    const requestUpdateGame = useCallback((row, col) => {
+        (async function(row, col) {
+             // Build URL
+             let url = configData.MINE_SWEEPER_API.URL;
+             url += `${configData.MINE_SWEEPER_API.RESOURCES.GAME}${id}/`;
+ 
+             const response = await RequestPut({url: url,
+                 bodyData: {
+                     row: row,
+                     col: col
+                 }, 
+                 header: {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${cookies.user.access_token}`
+                     }
+                 } 
+             });
+
+             if (response.status == 200){
+                setGameData(response.data);
+             }
+        })(row, col)
+    }, []);
 
     const requestRetrieveGame = useCallback(() => {
 
@@ -117,6 +166,8 @@ export default function GameContainer(){
                     requestCreateNewGame={requestCreateNewGame} 
                     isExpired={isExpired}
                     setIsExpired={setIsExpired}
+                    requestUpdateGame={requestUpdateGame}
+                    requestAddRemoveFlagGame={requestAddRemoveFlagGame}
                 />
             </Fragment>
         )

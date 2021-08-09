@@ -6,47 +6,59 @@ import { TypeGameDataResponse, TypeGameOBJ, TypeSquare } from '../../interfaces/
 export default function GameComponent(props: TypeGameOBJ) {
 
     const [seconds, setSeconds] = React.useState("000");
-    const { errorDisplay, gameData, squareRemaining, requestCreateNewGame, isExpired, setIsExpired } = props;
-    const [ localGameData, setLocalGameData ] = React.useState<TypeGameDataResponse>(gameData);
+    const { 
+        errorDisplay, 
+        gameData, 
+        squareRemaining, 
+        requestCreateNewGame, 
+        isExpired, 
+        setIsExpired,
+        requestUpdateGame,
+        requestAddRemoveFlagGame 
+    } = props;
 
     const ClickEffect = useCallback((event, row, col) => {
         event.preventDefault();
         let className = event.target.className;
 
-        if (event.type === 'click') {
-            if(className === "value" || className === "mine"){
-                return;
-            }
-            else if(className == "pattern"){
-                event.target.style.display = "none";
-            }
-        } else if (event.type === 'contextmenu') {
-            let element;
-
-            if(className === "pattern"){
-                element = event.target.previousElementSibling;
-            }
-            else if(className === "flag") {
-                element = event.target;
-            }
-            else {
-                return;
-            }
+        if(!gameData.end_game){
+            if (event.type === 'click') {
+                if(className === "value" || className === "mine"){
+                    return;
+                }
+                else if(className == "pattern"){
+                    event.target.style.display = "none";
+                    requestUpdateGame(row, col);
+                }
+            } else if (event.type === 'contextmenu') {
+                let element;
     
-            if(element.style.display && element.style.display === "block"){
-                element.style.display = "none";
-            }
-            else {
-                element.style.display = "block";
+                if(className === "pattern"){
+                    element = event.target.previousElementSibling;
+                }
+                else if(className === "flag") {
+                    element = event.target;
+                }
+                else {
+                    return;
+                }
+        
+                if(element.style.display && element.style.display === "block"){
+                    element.style.display = "none";
+                }
+                else {
+                    element.style.display = "block";
+                }
+                console.log("testing...");
+                requestAddRemoveFlagGame(row, col);
             }
         }
-        
     }, []);
 
     useEffect(() => {
         if (parseInt(seconds) < 999) {
 
-            if(gameData && gameData.created_at && !isExpired) {
+            if(gameData && gameData.created_at && !isExpired && !gameData.end_game) {
                 let secondBetweenTwoDate = Math.floor((new Date().getTime() - new Date(gameData.created_at).getTime()) / 1000);
                 secondBetweenTwoDate += 1;
                 let seconds_string:string;
@@ -93,9 +105,9 @@ export default function GameComponent(props: TypeGameOBJ) {
                                     <div className="control-face control-face-win">
                                         &nbsp;
                                     </div> :
-                                    <div className="control-face control-face-normal">
+                                <div className="control-face control-face-normal">
                                         &nbsp;
-                                    </div>
+                                </div>
                                 }
                                
                             </div>
@@ -122,7 +134,6 @@ export default function GameComponent(props: TypeGameOBJ) {
                                                     onClick={(event) => ClickEffect(event, row.index, square.index)} 
                                                     onContextMenu={(event) => ClickEffect(event, row.index, square.index)}
                                                     >
-
                                                         <div className="flag" style={(square.is_flaged && !square.is_selected)? {display: "block"} : {display: "none"}}>&nbsp;</div>
                                                         <div className="pattern" style={(square.is_selected)? {display: "none"} : {display: "block"}}>&nbsp;</div>
                                                         {

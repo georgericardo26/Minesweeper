@@ -61,7 +61,9 @@ export type TypeGameOBJ = {
     squareRemaining?: string,
     requestCreateNewGame: () => void,
     isExpired: boolean,
-    setIsExpired: any
+    setIsExpired: any,
+    requestUpdateGame: (row:number, col:number) => void,
+    requestAddRemoveFlagGame: (row:number, col:number) => void
 }
 
 export type TypeCreateGame = {

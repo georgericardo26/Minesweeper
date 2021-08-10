@@ -68,11 +68,11 @@ export default function GameContainer(){
 
     }, [gameData]);
 
-    const requestAddRemoveFlagGame = useCallback((row, col) => {
-        (async function(row, col) {
+    const requestAddRemoveFlagGame = useCallback((row, col, gameDataId) => {
+        (async function(row, col, gameDataId) {
              // Build URL
              let url = configData.MINE_SWEEPER_API.URL;
-             url += `${configData.MINE_SWEEPER_API.RESOURCES.GAME}${id}/flag`;
+             url += `${configData.MINE_SWEEPER_API.RESOURCES.GAME}${gameDataId}/flag`;
  
              const response = await RequestPut({url: url,
                  bodyData: {
@@ -90,14 +90,14 @@ export default function GameContainer(){
              if (response.status == 200){
                 setGameData(response.data);
              }
-        })(row, col)
+        })(row, col, gameDataId)
     }, []);
 
-    const requestUpdateGame = useCallback((row, col) => {
-        (async function(row, col) {
+    const requestUpdateGame = useCallback((row, col, gameDataId) => {
+        (async function(row, col, gameDataId) {
              // Build URL
              let url = configData.MINE_SWEEPER_API.URL;
-             url += `${configData.MINE_SWEEPER_API.RESOURCES.GAME}${id}/`;
+             url += `${configData.MINE_SWEEPER_API.RESOURCES.GAME}${gameDataId}/`;
  
              const response = await RequestPut({url: url,
                  bodyData: {
@@ -115,7 +115,7 @@ export default function GameContainer(){
              if (response.status == 200){
                 setGameData(response.data);
              }
-        })(row, col)
+        })(row, col, gameDataId)
     }, []);
 
     const requestRetrieveGame = useCallback(() => {

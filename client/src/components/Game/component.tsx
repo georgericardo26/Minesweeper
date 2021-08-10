@@ -2,6 +2,7 @@ import React, {useEffect, useCallback} from 'react'
 import { HeaderComponent } from '../Main/components/component'
 import CountUp from 'react-countup';
 import { TypeGameDataResponse, TypeGameOBJ, TypeSquare } from '../../interfaces/defaults';
+import demo from "../../assets/img/demo.jpeg";
 
 export default function GameComponent(props: TypeGameOBJ) {
 
@@ -17,7 +18,7 @@ export default function GameComponent(props: TypeGameOBJ) {
         requestAddRemoveFlagGame 
     } = props;
 
-    const ClickEffect = useCallback((event, row, col) => {
+    const ClickEffect = useCallback((event, row, col, gameDataId) => {
         event.preventDefault();
         let className = event.target.className;
 
@@ -28,7 +29,7 @@ export default function GameComponent(props: TypeGameOBJ) {
                 }
                 else if(className == "pattern"){
                     event.target.style.display = "none";
-                    requestUpdateGame(row, col);
+                    requestUpdateGame(row, col, gameDataId);
                 }
             } else if (event.type === 'contextmenu') {
                 let element;
@@ -50,7 +51,7 @@ export default function GameComponent(props: TypeGameOBJ) {
                     element.style.display = "block";
                 }
                 console.log("testing...");
-                requestAddRemoveFlagGame(row, col);
+                requestAddRemoveFlagGame(row, col, gameDataId);
             }
         }
     }, []);
@@ -87,83 +88,98 @@ export default function GameComponent(props: TypeGameOBJ) {
 
     return (
         <div className="container">
-            <div className="game">
-                <div className="game-header">
-                    <div className="row">
-                        <div className="col-md-4">
-                            <div className="panel-score-box">
-                                <span>{squareRemaining}</span>
-                            </div>
-                        </div>
-                        <div className="col-md-4">
-                            <div className="control-button" onClick={()=>(requestCreateNewGame())}>
-                                {(gameData.end_game && !gameData.is_winner)?
-                                    <div className="control-face control-face-lose">
-                                        &nbsp;
-                                    </div>: 
-                                (gameData.end_game && gameData.is_winner) ?
-                                    <div className="control-face control-face-win">
-                                        &nbsp;
-                                    </div> :
-                                <div className="control-face control-face-normal">
-                                        &nbsp;
+            <div className="row">
+                <div className="col-md-8">
+                    <div className="game">
+                        <div className="game-header">
+                            <div className="row">
+                                <div className="col-md-4">
+                                    <div className="panel-score-box">
+                                        <span>{gameData.square_remaining}</span>
+                                    </div>
                                 </div>
-                                }
-                               
+                                <div className="col-md-4">
+                                    <div className="control-button" onClick={()=>(requestCreateNewGame())}>
+                                        {(gameData.end_game && !gameData.is_winner)?
+                                            <div className="control-face control-face-lose">
+                                                &nbsp;
+                                            </div>: 
+                                        (gameData.end_game && gameData.is_winner) ?
+                                            <div className="control-face control-face-win">
+                                                &nbsp;
+                                            </div> :
+                                        <div className="control-face control-face-normal">
+                                                &nbsp;
+                                        </div>
+                                        }
+                                    
+                                    </div>
+                                </div>
+                                <div className="col-md-4">
+                                    <div className="panel-time-box">
+                                        <span>{seconds}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="col-md-4">
-                            <div className="panel-time-box">
-                                <span>{seconds}</span>
-                            </div>
+                        <div className="game-content">
+                            <table className="board">
+                                <tbody>
+
+                                    {
+                                        (gameData && gameData.rows)?
+                                            gameData.rows.map((row: any)=>(
+                                                <tr>
+                                                    {row.square_items.map((square:TypeSquare)=>(
+                                                        <td>
+                                                            <div className="cell"
+                                                            key={`${row.index},${square.index}`} 
+                                                            onClick={(event) => ClickEffect(event, row.index, square.index, gameData.id)} 
+                                                            onContextMenu={(event) => ClickEffect(event, row.index, square.index, gameData.id)}
+                                                            >
+                                                                <div className="flag" style={(square.is_flaged && !square.is_selected)? {display: "block"} : {display: "none"}}>&nbsp;</div>
+                                                                <div className="pattern" style={(square.is_selected)? {display: "none"} : {display: "block"}}>&nbsp;</div>
+                                                                {
+                                                                    (square.is_mine)? 
+                                                                    <div className="spot-item mine">
+                                                                        &nbsp;
+                                                                    </div>
+                                                                    : 
+                                                                    <div className="spot-item value">
+                                                                        {
+                                                                            (square.adj_mines == 0)? "" :
+                                                                            (square.adj_mines == 1)? <span className="color-adj-1">{square.adj_mines}</span> :
+                                                                            (square.adj_mines == 2)? <span className="color-adj-2">{square.adj_mines}</span> :
+                                                                            (square.adj_mines == 3)? <span className="color-adj-3">{square.adj_mines}</span> :
+                                                                            <span className="color-adj-4">{square.adj_mines}</span>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                    ))}
+                                                </tr>
+                                        )) : 
+                                        <tr>
+                                            <td key="error">Error trying to process the request</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div className="game-content">
-                    <table className="board">
-                        <tbody>
-
-                            {
-                                (gameData && gameData.rows)?
-                                    gameData.rows.map((row: any)=>(
-                                        <tr>
-                                            {row.square_items.map((square:TypeSquare)=>(
-                                                <td>
-                                                    <div className="cell"
-                                                    key={`${row.index},${square.index}`} 
-                                                    onClick={(event) => ClickEffect(event, row.index, square.index)} 
-                                                    onContextMenu={(event) => ClickEffect(event, row.index, square.index)}
-                                                    >
-                                                        <div className="flag" style={(square.is_flaged && !square.is_selected)? {display: "block"} : {display: "none"}}>&nbsp;</div>
-                                                        <div className="pattern" style={(square.is_selected)? {display: "none"} : {display: "block"}}>&nbsp;</div>
-                                                        {
-                                                            (square.is_mine)? 
-                                                            <div className="spot-item mine">
-                                                                &nbsp;
-                                                            </div>
-                                                            : 
-                                                            <div className="spot-item value">
-                                                                {
-                                                                    (square.adj_mines == 0)? "" :
-                                                                    (square.adj_mines == 1)? <span className="color-adj-1">{square.adj_mines}</span> :
-                                                                    (square.adj_mines == 2)? <span className="color-adj-2">{square.adj_mines}</span> :
-                                                                    (square.adj_mines == 3)? <span className="color-adj-3">{square.adj_mines}</span> :
-                                                                    <span className="color-adj-4">{square.adj_mines}</span>
-                                                                }
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                </td>
-                                            ))}
-                                        </tr>
-                                )) : 
-                                <tr>
-                                    <td key="error">Error trying to process the request</td>
-                                </tr>
-                            }
-
-                        </tbody>
-                    </table>
+                <div className="col-md-4">
+                    
+                    <div className="instructions-area">
+                        <h2>Instructions</h2>
+                        <div className="area-1">
+                            <img src={demo}></img>
+                        </div>
+                        <h2>New game with different rows and cols?</h2>
+                        <a href="/">Click Here</a>
+                    </div>
                 </div>
             </div>
         </div>

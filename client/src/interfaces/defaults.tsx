@@ -62,8 +62,8 @@ export type TypeGameOBJ = {
     requestCreateNewGame: () => void,
     isExpired: boolean,
     setIsExpired: any,
-    requestUpdateGame: (row:number, col:number) => void,
-    requestAddRemoveFlagGame: (row:number, col:number) => void
+    requestUpdateGame: (row:number, col:number, gameDataId:number) => void,
+    requestAddRemoveFlagGame: (row:number, col:number, gameDataId:number) => void
 }
 
 export type TypeCreateGame = {

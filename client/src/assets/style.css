@@ -198,7 +198,8 @@ body {
 /* GAME SECTION
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .game {
-  margin-top: 15vw;
+  /* margin-top: 15vw; */
+  margin: 15vw auto;
   background-color: #C6C6C6;
   width: fit-content;
   padding: 10px;
@@ -327,6 +328,21 @@ body {
   color:rgb(169, 0, 175);
   font-weight: 800;
   font-size: 19px;
+}
+.instructions-area {
+  margin-top: 15vw;
+  padding: 10px;
+}
+.instructions-area h2 {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+.instructions-area a {
+  text-align: center;
+}
+.instructions-area .area-1 img {
+  width: 100%;
 }
 
 /* HEADER STYLES

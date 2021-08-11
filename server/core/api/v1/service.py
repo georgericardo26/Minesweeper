@@ -129,6 +129,14 @@ class MineSweeperAction:
 
     def make_move(self, row: int, col: int) -> "BoardModel":
 
+        #Check if it is expired
+        if self.board.is_expired:
+            #Select all squires because the game is over
+            return self.update_board_expired_time()
+        
+        if self.board.end_game:
+            return self.board
+
         #If it is mine, select all mines and game over.
         if self.__check_is_mine(row, col):
             self.__update_mines()
@@ -140,7 +148,18 @@ class MineSweeperAction:
         #If it isn't mine, check its value    
         self.__make_depth_move(row, col)
 
+        #Update the remaining
+        self.__update_remaining()
+        
         return self.board
+
+    def update_board_expired_time(self) -> "BoardModel":
+        #Select all squires because the game is over
+        self.square_model.objects.all().update(is_selected=True) 
+        self.board.end_game = True
+        self.board.save()
+        return self.board
+        
 
     def __make_depth_move(self, row: int, col: int) -> bool:
 
@@ -150,8 +169,6 @@ class MineSweeperAction:
             board__id=self.board.id).first()
 
         if square_obj and not square_obj.is_selected:
-            self.board.spots_remaining = F('square_remaining') - 1
-            self.board.save()
 
             square_obj.is_selected = True
             square_obj.save()
@@ -193,6 +210,11 @@ class MineSweeperAction:
         self.square_model.objects.filter(
             is_mine=True, 
             board__id=self.board.id).update(is_selected=True) 
+
+    def __update_remaining(self) -> None:
+        remaining_items = self.board.square_items.filter(is_selected=False).count()
+        self.board.square_remaining = remaining_items
+        self.board.save()
 
     def set_or_remove_flag(self, row: int, col: int) -> "BoardModel":
         square_obj = self.square_model.objects.filter(

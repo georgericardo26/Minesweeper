@@ -41,7 +41,16 @@ class MineSweeperRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     #View to make move from an alread created board
     queryset = BoardModel.objects.all()
     serializer_class = MineSweeperActionSerializer
-    permission_classes = [permissions.IsAuthenticated, MineSweeperUpdatePermission]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def retrieve(self, request, *args, **kwargs):
+        board_obj = self.get_object()
+        #If game expired, update and select all squares. The game is over
+        if board_obj.is_expired:
+            mine_sweeper_action = MineSweeperAction(board_obj, RowModel, SquareItemModel)
+            board_obj = mine_sweeper_action.update_board_expired_time()
+        serializer_board = BoardSerializer(instance=board_obj)
+        return Response(data=serializer_board.data, status=200)
 
     def update(self, request, *args, **kwargs):
         serializer_input = self.serializer_class(data=request.data)

@@ -178,7 +178,7 @@ export default function GameComponent(props: TypeGameOBJ) {
                             <img src={demo}></img>
                         </div>
                         <h2>New game with different rows and cols?</h2>
-                        <a href="/">Click Here</a>
+                        <a className="btn new-game-button" href="/">Click Here</a>
                     </div>
                 </div>
             </div>

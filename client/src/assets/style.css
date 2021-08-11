@@ -336,13 +336,22 @@ body {
 .instructions-area h2 {
   text-align: center;
   font-size: 18px;
-  margin-top: 20px;
+  margin-top: 40px;
 }
 .instructions-area a {
   text-align: center;
 }
 .instructions-area .area-1 img {
   width: 100%;
+}
+
+.instructions-area .new-game-button {
+  display: block;
+  width: 100%;
+  background-color: var(--strong-blue);
+  color: var(--white);
+  border-radius: 10px;
+  height: 35px;
 }
 
 /* HEADER STYLES

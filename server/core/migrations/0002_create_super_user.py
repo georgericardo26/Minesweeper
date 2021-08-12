@@ -8,18 +8,21 @@ class Migration(migrations.Migration):
     ]
 
     def generate_superuser(apps, schema_editor):
-        from core.models import User
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
 
         DJANGO_SU_NAME = os.environ.get('DJANGO_SU_NAME')
         DJANGO_SU_EMAIL = os.environ.get('DJANGO_SU_EMAIL')
         DJANGO_SU_PASSWORD = os.environ.get('DJANGO_SU_PASSWORD')
 
-        superuser = User.objects.create_superuser(
-            username=DJANGO_SU_NAME,
-            email=DJANGO_SU_EMAIL,
-            password=DJANGO_SU_PASSWORD)
+        if not User.objects.filter(username=DJANGO_SU_NAME).exists():
+            superuser = User.objects.create_superuser(
+                username=DJANGO_SU_NAME,
+                email=DJANGO_SU_EMAIL,
+                password=DJANGO_SU_PASSWORD)
 
-        superuser.save()
+            superuser.save()
 
     operations = [
         migrations.RunPython(generate_superuser),

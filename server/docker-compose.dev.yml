@@ -2,6 +2,9 @@ version: '3'
 
 services:
     nginx:
+        build: 
+            context: ./nginx/server
+            dockerfile: Dockerfile
         volumes:
             - static_volume:/code/server/static
         depends_on:
@@ -12,14 +15,10 @@ services:
         command: bash -c "cd server && 
                           python manage.py collectstatic --noinput &&
                           python manage.py migrate && 
-                          uwsgi --socket :8001 --module uplitt_server.wsgi"
-        container_name: serve
-        environment: 
-            DJANGO_SECURITY_KEY: django-insecure-d78p_i#m679#_c5mq*!uyikc1h80f$-_b(q3(1*azwzl=0d9z_
-            SETTINGS_ENV: minesweeper.settings.dev
-            DJANGO_SU_NAME: admin
-            DJANGO_SU_EMAIL: admin@admin.com
-            DJANGO_SU_PASSWORD: admin
+                          uwsgi --socket :8001 --module minesweeper.wsgi --py-autoreload=1"
+        container_name: server
+        env_file: 
+            server/.env
         volumes:
             - .:/code
             - static_volume:/code/server/static

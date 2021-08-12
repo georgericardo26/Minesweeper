@@ -13,15 +13,32 @@ services:
                           python manage.py collectstatic --noinput &&
                           python manage.py migrate && 
                           uwsgi --socket :8001 --module uplitt_server.wsgi"
-        container_name: server
-        env_file: 
-            server/.env
+        container_name: serve
+        environment: 
+            DJANGO_SECURITY_KEY: django-insecure-d78p_i#m679#_c5mq*!uyikc1h80f$-_b(q3(1*azwzl=0d9z_
+            SETTINGS_ENV: minesweeper.settings.dev
+            DJANGO_SU_NAME: admin
+            DJANGO_SU_EMAIL: admin@admin.com
+            DJANGO_SU_PASSWORD: admin
         volumes:
             - .:/code
             - static_volume:/code/server/static
         expose:
             - "80"
         restart: "on-failure"
+    
+    db_postgres:
+        image: postgres
+        container_name: postgres_db_api
+        environment:
+            POSTGRES_USER: minesweeper
+            POSTGRES_DB: minesweeper
+            POSTGRES_PASSWORD: minesweeper
+        volumes:
+            - db_data_api:/var/lib/postgresql/data/
+        ports:
+            - "5432:5432"
 
 volumes:
     static_volume:
+    db_data_api:

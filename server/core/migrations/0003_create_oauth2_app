@@ -1,0 +1,19 @@
+import os
+from django.db import migrations
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('core', '0002_create_super_user'),
+    ]
+
+    def generate_oauth2_app(apps, schema_editor):
+        from oauth2_provider.models import Application
+
+        app = Application(name='app_test', client_type='confidential',
+                          authorization_grant_type='password')
+        app.save()
+
+    operations = [
+        migrations.RunPython(generate_oauth2_app),
+    ]

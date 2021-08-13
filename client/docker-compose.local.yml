@@ -1,19 +1,10 @@
 version: '3'
 
 services:
-    nginx:
-        build:
-            context: ./nginx/client
-            dockerfile: Dockerfile
-        volumes:
-            - build_app:/var/www
 
     frontend:
-        build: ./client
+        build: .
         container_name: frontend
-        command: sh -c "npm run build && cp -R build/* /var/www"
-        volumes:
-            - build_app:/var/www
-
-volumes:
-    build_app:
+        command: sh -c "npm start"
+        ports:
+            - "3000:3000"

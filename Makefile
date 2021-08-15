@@ -16,4 +16,4 @@ up-frontend-local:
 	cd client && docker-compose -f docker-compose.local.yml up --force-recreate
 
 down: ## shuts down all docker containers
-	docker-compose down
+	docker stop $(docker ps -a -q)

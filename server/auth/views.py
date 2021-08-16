@@ -49,4 +49,4 @@ class AuthView(generics.CreateAPIView):
         body = json.loads(body)
         body["user"] = serializer.data
 
-        return Response(body, status=status.HTTP_201_CREATED)
+        return Response(body, status=status_code)

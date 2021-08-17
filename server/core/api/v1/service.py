@@ -7,7 +7,7 @@ This module has been created to handle query objects using business logics and r
 """
 import random
 
-from django.db.models import F
+from django.db.models import F, Q
 
 
 class MineSweeperBuild:
@@ -150,6 +150,9 @@ class MineSweeperAction:
 
         #Update the remaining
         self.__update_remaining()
+
+        #Check endup remaining squares
+        self.__check_remaining_squares()
         
         return self.board
 
@@ -212,9 +215,15 @@ class MineSweeperAction:
             board__id=self.board.id).update(is_selected=True) 
 
     def __update_remaining(self) -> None:
-        remaining_items = self.board.square_items.filter(is_selected=False).count()
+        remaining_items = self.board.square_items.filter(Q(is_selected=False) & Q(is_mine=False)).count()
         self.board.square_remaining = remaining_items
         self.board.save()
+
+    def __check_remaining_squares(self) -> None:
+        if self.board.square_remaining < 1:
+            self.board.end_game = True
+            self.board.is_winner = True
+            self.board.save()
 
     def set_or_remove_flag(self, row: int, col: int) -> "BoardModel":
         square_obj = self.square_model.objects.filter(

@@ -33,7 +33,8 @@ export default function SignInContainer(){
                 // Build URL
                 let url = configData.MINE_SWEEPER_API.URL;
                 url += configData.MINE_SWEEPER_API.RESOURCES.AUTH_TOKEN;
-
+                
+                // Get env variables, ensure it has not any cached
                 const response = await RequestPost({url: url, bodyData: {
                     client_id: process.env.REACT_APP_MINESWEEPER_API_CLIENT_ID,
                     client_secret: process.env.REACT_APP_MINESWEEPER_CLIENT_SECRET,

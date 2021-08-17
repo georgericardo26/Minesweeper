@@ -2,6 +2,9 @@
 
 The back-end was made by [George Ricardo](https://github.com/georgericardo26).
 
+- Frontend Application Address: `http://18.118.1.2/`
+- Backend Application Address: `http://3.21.33.18/api/v1/swagger/`
+
 Tools
 ------------
 - Python
@@ -64,6 +67,8 @@ Access `http://localhost/api/v1/swagger` to see the dynamic documentation workin
 
 Frontend Installation
 ------------
+We do need create an OAuth2 application to be able to authenticate users.
+
 Access `http://localhost/admin/`, put username as `admin` and password as `admin`;
 
 Create a new application 
@@ -71,20 +76,24 @@ Create a new application
 ![](https://minesweeper1.s3.us-east-2.amazonaws.com/screenshot2.jpg)
 
 
-Mark `Client Type` as `public`;
-Mark `Authorization Grant Type` as Resouce Owner password-based
-Fill the field `Name` as the application name
-Click on Save button;
-
-Click on the application created and copy `client_id` and `client_secret`;
-
-Create a new .env file on `client/` and add these lines:
+- Mark `Client Type` as `public`;
+- Mark `Authorization Grant Type` as Resouce Owner password-based
+- Fill the field `Name` as the application name
+- Click on Save button;
+- Click on the application created and copy `client_id` and `client_secret`;
+- Create a new .env file on `client/` and add these lines:
 ```yaml
 REACT_APP_MINESWEEPER_API_CLIENT_ID=YOUR_CLIENT_ID
 REACT_APP_MINESWEEPER_CLIENT_SECRET=YOUR_CLIENT_SECRET
 REACT_APP_HOST=localhost
 ```
-Next, init the frontend application
-`make up-frontend-local`
+Next, init the frontend application `make up-frontend-local`
 
-Test your application accessing `http://localhot:3000`
+Test your application accessing `http://localhost:3000`
+
+
+To Do:
+------------
+- In terms of game functions, I do need add the function RESUME/STOP from the game to be able to continue the game in another moment.
+- In terms of performance, the backend side is creating each number of rows and columns using `Django bulk_create` what can be a extensive single thread work in case of much rows and columns, the solution for the future would be using multi-threads or asynchronous application.
+- Continuing the performance stuff, the traversing responsability is totally to backend side, what can be splited with frontend, making the backend process asynchronous and improving in performance.

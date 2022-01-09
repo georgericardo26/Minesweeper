@@ -17,5 +17,4 @@ coreapi
 pyyaml
 python-dotenv
 pytest
-pathlib
 drf-yasg

@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+
+    db_postgres:
+        image: postgres
+        container_name: postgres_db_api
+        environment:
+            POSTGRES_USER: minesweeper
+            POSTGRES_DB: minesweeper
+            POSTGRES_PASSWORD: minesweeper
+        volumes:
+            - db_data_api:/var/lib/postgresql/data/
+        ports:
+            - "5432:5432"
+
     nginx:
         build: 
             context: ./nginx/server
@@ -27,18 +40,6 @@ services:
         # restart: "on-failure"
         depends_on:
             - db_postgres
-
-    db_postgres:
-        image: postgres
-        container_name: postgres_db_api
-        environment:
-            POSTGRES_USER: minesweeper
-            POSTGRES_DB: minesweeper
-            POSTGRES_PASSWORD: minesweeper
-        volumes:
-            - db_data_api:/var/lib/postgresql/data/
-        ports:
-            - "5432:5432"
 
 volumes:
     db_data_api:

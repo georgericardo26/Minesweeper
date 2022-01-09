@@ -27,21 +27,21 @@ class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     #View to retrieve and update a user
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
 
 class MineSweeperCreateView(generics.CreateAPIView):
     #View to create the board
     queryset = BoardModel.objects.all()
     serializer_class = BoardSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
 
 class MineSweeperRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     #View to make move from an alread created board
     queryset = BoardModel.objects.all()
     serializer_class = MineSweeperActionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def retrieve(self, request, *args, **kwargs):
         board_obj = self.get_object()
@@ -74,7 +74,7 @@ class MineSweeperSquareItemModelFlagUpdateView(generics.UpdateAPIView):
     #View to add or remove flag to/from square item
     queryset = BoardModel.objects.all()
     serializer_class = MineSweeperActionSerializer
-    permission_classes = [permissions.IsAuthenticated, MineSweeperUpdatePermission]
+    permission_classes = [permissions.AllowAny, MineSweeperUpdatePermission]
 
     def update(self, request, *args, **kwargs):
         serializer_input = self.serializer_class(data=request.data)

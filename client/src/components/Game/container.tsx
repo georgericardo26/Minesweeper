@@ -48,7 +48,7 @@ export default function GameContainer(){
                       header: {
                           headers: {
                               'Content-Type': 'application/json',
-                              'Authorization': `Bearer ${cookies.user.access_token}`
+                            //   'Authorization': `Bearer ${cookies.user.access_token}`
                           }
                       } 
                   });
@@ -82,7 +82,7 @@ export default function GameContainer(){
                  header: {
                      headers: {
                          'Content-Type': 'application/json',
-                         'Authorization': `Bearer ${cookies.user.access_token}`
+                        //  'Authorization': `Bearer ${cookies.user.access_token}`
                      }
                  } 
              });
@@ -107,7 +107,7 @@ export default function GameContainer(){
                  header: {
                      headers: {
                          'Content-Type': 'application/json',
-                         'Authorization': `Bearer ${cookies.user.access_token}`
+                        //  'Authorization': `Bearer ${cookies.user.access_token}`
                      }
                  } 
              });
@@ -130,7 +130,7 @@ export default function GameContainer(){
                 header: {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${cookies.user.access_token}`
+                        // 'Authorization': `Bearer ${cookies.user.access_token}`
                     }
                 } 
             });
@@ -152,28 +152,28 @@ export default function GameContainer(){
         console.log(gameData);
     }, [requestRetrieveGame])
 
-    if(cookies && cookies.user){
-        return (
-            <Fragment>
-                <TopBarComponent>
-                <TopBarLogoComponent grid="col-md-9"/>
-                <TopBarProfileComponent grid="col-md-3" profileName={cookies.user.user.username} />
-                </TopBarComponent>
-                <GameComponent 
-                    errorDisplay={errorDisplay} 
-                    gameData={gameData} 
-                    squareRemaining={squareRemaining} 
-                    requestCreateNewGame={requestCreateNewGame} 
-                    isExpired={isExpired}
-                    setIsExpired={setIsExpired}
-                    requestUpdateGame={requestUpdateGame}
-                    requestAddRemoveFlagGame={requestAddRemoveFlagGame}
-                />
-            </Fragment>
-        )
-    }
-    else {
-        window.location.href = "/signin"
-        return (<Fragment></Fragment>)
-    }
+    // if(cookies && cookies.user){
+    return (
+        <Fragment>
+            <TopBarComponent>
+            <TopBarLogoComponent grid="col-md-9"/>
+            {/* <TopBarProfileComponent grid="col-md-3" profileName={cookies.user.user.username} /> */}
+            </TopBarComponent>
+            <GameComponent 
+                errorDisplay={errorDisplay} 
+                gameData={gameData} 
+                squareRemaining={squareRemaining} 
+                requestCreateNewGame={requestCreateNewGame} 
+                isExpired={isExpired}
+                setIsExpired={setIsExpired}
+                requestUpdateGame={requestUpdateGame}
+                requestAddRemoveFlagGame={requestAddRemoveFlagGame}
+            />
+        </Fragment>
+    )
+    // }
+    // else {
+    //     window.location.href = "/signin"
+    //     return (<Fragment></Fragment>)
+    // }
 }

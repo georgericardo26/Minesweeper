@@ -39,7 +39,7 @@ export default function HomeContainer(){
                 header: {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${cookies.user.access_token}`
+                        // 'Authorization': `Bearer ${cookies.user.access_token}`
                     }
                 },
                 bodyData: {
@@ -59,21 +59,21 @@ export default function HomeContainer(){
         })(obj);
     }, []);
 
-    if (cookies && cookies.user) {
-        return (
-            <Fragment>
-                <TopBarComponent>
-                    <TopBarLogoComponent grid="col-md-3"/>
-                </TopBarComponent>
-                <HomeComponent 
-                    handleSubmit={handleSubmit} 
-                    ErrorDisplay={errorDisplay} 
-                />
-            </Fragment>
-        )
-    }
-    else {
-        window.location.href = "/signin"
-        return (<Fragment></Fragment>)
-    }
+    // if (cookies && cookies.user) {
+     return (
+         <Fragment>
+             <TopBarComponent>
+                 <TopBarLogoComponent grid="col-md-3"/>
+             </TopBarComponent>
+             <HomeComponent 
+                 handleSubmit={handleSubmit} 
+                 ErrorDisplay={errorDisplay} 
+             />
+         </Fragment>
+     )
+    // }
+    // else {
+    //     window.location.href = "/signin"
+    //     return (<Fragment></Fragment>)
+    // }
 }

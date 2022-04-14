@@ -11,7 +11,7 @@ const HomeComponent = function(props: IHome){
             <div className="container">
                 <div className="form-content">
                     <div className="title-content">
-                        <h2>New Game? Tell us how do you want the game?</h2>
+                        <h2>New Game? Choose the level!</h2>
                     </div>
                     <div className='select-level-field'>
                         <button className="btn new-game-button" id='beginner' onClick={(event) => handleSubmit(event)}>Beginner</button>

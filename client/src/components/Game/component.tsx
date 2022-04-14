@@ -1,16 +1,12 @@
 import React, {useEffect, useCallback} from 'react'
-import { HeaderComponent } from '../Main/components/component'
-import CountUp from 'react-countup';
-import { TypeGameDataResponse, TypeGameOBJ, TypeSquare } from '../../interfaces/defaults';
+import { TypeGameOBJ, TypeSquare } from '../../interfaces/defaults';
 import demo from "../../assets/img/demo.jpeg";
 
 export default function GameComponent(props: TypeGameOBJ) {
 
     const [seconds, setSeconds] = React.useState("000");
     const { 
-        errorDisplay, 
         gameData, 
-        squareRemaining, 
         requestCreateNewGame, 
         isExpired, 
         setIsExpired,
@@ -177,7 +173,7 @@ export default function GameComponent(props: TypeGameOBJ) {
                         <div className="area-1">
                             <img src={demo}></img>
                         </div>
-                        <h2>New game with different rows and cols?</h2>
+                        <h2>New game with different level?</h2>
                         <a className="btn new-game-button" href="/">Click Here</a>
                     </div>
                 </div>

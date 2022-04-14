@@ -12,15 +12,15 @@ class Migration(migrations.Migration):
 
         User = get_user_model()
 
-        DJANGO_SU_NAME = os.environ.get('DJANGO_SU_NAME')
-        DJANGO_SU_EMAIL = os.environ.get('DJANGO_SU_EMAIL')
-        DJANGO_SU_PASSWORD = os.environ.get('DJANGO_SU_PASSWORD')
+        DJANGO_DEFAULT_USERNAME = os.environ.get('DJANGO_DEFAULT_USERNAME')
+        DJANGO_DEFAULT_EMAIL = os.environ.get('DJANGO_DEFAULT_EMAIL')
+        DJANGO_DEFAULT_PASSWORD = os.environ.get('DJANGO_DEFAULT_PASSWORD')
 
-        if not User.objects.filter(username=DJANGO_SU_NAME).exists():
+        if not User.objects.filter(username=DJANGO_DEFAULT_USERNAME).exists():
             superuser = User.objects.create_superuser(
-                username=DJANGO_SU_NAME,
-                email=DJANGO_SU_EMAIL,
-                password=DJANGO_SU_PASSWORD)
+                username=DJANGO_DEFAULT_USERNAME,
+                email=DJANGO_DEFAULT_EMAIL,
+                password=DJANGO_DEFAULT_PASSWORD)
 
             superuser.save()
 

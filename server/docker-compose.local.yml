@@ -2,6 +2,19 @@ version: '3'
 
 services:
 
+    nginx:
+        container_name: server_nginx
+        build: 
+            context: ./nginx
+            dockerfile: Dockerfile
+        volumes:
+            - static_volume:/code/static
+        depends_on:
+            - backend_api
+        ports:
+            - 80:80
+            - 8000:8000
+
     db_postgres:
         image: postgres
         container_name: postgres_db_api
@@ -9,38 +22,24 @@ services:
             POSTGRES_USER: minesweeper
             POSTGRES_DB: minesweeper
             POSTGRES_PASSWORD: minesweeper
-        volumes:
-            - db_data_api:/var/lib/postgresql/data/
         ports:
             - "5432:5432"
-
-    nginx:
-        build: 
-            context: ./nginx/server
-            dockerfile: Dockerfile
-        volumes:
-            - static_volume:/code/server/static
-        depends_on:
-            - backend_api
             
     backend_api:
-        build: ./server
-        command: bash -c "cd server && 
-                          python manage.py collectstatic --noinput &&
+        build: .
+        command: bash -c "python manage.py collectstatic --noinput &&
                           python manage.py migrate && 
                           uwsgi --socket :8001 --module minesweeper.wsgi --py-autoreload=1"
         container_name: server
-        environment:
-            SETTINGS_ENV: minesweeper.settings.base
+        env_file: 
+            - envs/local.env
         volumes:
             - .:/code
-            - static_volume:/code/server/static
+            - static_volume:/code/static
         expose:
             - "80"
-        # restart: "on-failure"
         depends_on:
             - db_postgres
 
 volumes:
-    db_data_api:
     static_volume:

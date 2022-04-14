@@ -507,6 +507,9 @@ body {
     width: 35vw;
     margin: 0 auto;
   }
+  .home-page .form-content {
+    margin: 30% auto;
+  }
   .home-page .form-content .title-content {
     border-bottom: solid 1px var(--strong-blue);
     margin-bottom: 15px;
@@ -531,17 +534,18 @@ body {
     height: 30px;
   }
 
-  .home-page .form-content .new-game-form .new-game-button {
+  .home-page .form-content .select-level-field .new-game-button {
     display: block;
     width: 100%;
     background-color: var(--strong-blue);
     color: var(--white);
     border-radius: 10px;
     height: 35px;
+    margin: 20px auto;
   }
-  .home-page .form-content .new-game-form .new-game-button:hover {
+  .home-page .form-content .select-level-field .new-game-button:hover {
     background-color: var(--light-blue);
   }
-  .home-page .form-content .new-game-form  .new-game-button:disabled {
+  .home-page .form-content .select-level-field .new-game-button:disabled {
     background-color: var(--light-grey);
   }

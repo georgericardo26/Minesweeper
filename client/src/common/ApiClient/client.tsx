@@ -17,7 +17,7 @@ const RequestPost = async (requestData: IRequestData)  => {
   }
   catch (err) {
       console.log("error client", err);
-      return {status: err.status, data: err.response.data}
+      return {status: 500, data: {"message": "error"}}
 
   }
 

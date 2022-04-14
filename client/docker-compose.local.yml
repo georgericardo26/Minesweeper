@@ -3,8 +3,10 @@ version: '3'
 services:
 
     frontend:
-        build: ./client
+        build: .
         container_name: frontend
         command: sh -c "npm start"
-        expose: 
+        ports:
             - "3000:3000"
+        expose: 
+            - "3000"

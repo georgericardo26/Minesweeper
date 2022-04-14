@@ -1,28 +1,26 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react'
+import React, { Fragment, useCallback, useState } from 'react'
 
 import { TypeCreateGame } from '../../interfaces/defaults';
 import { HomeComponent } from './component'
 import configData from '../../config'
 import { TopBarComponent, TopBarLogoComponent } from '../Main/components/component';
 import { RequestPost } from '../../common/ApiClient/client';
-import { useCookies } from 'react-cookie';
 
 export default function HomeContainer(){
 
-    // const [ inputFields, setInputFields ] = useState<TypeCreateGame>({});
     const [ errorDisplay, setErrorDisplay ] = useState(false);
-    const [cookies] = useCookies(['user']);
-    const [newGame, setNewGame] = useState(false);
+    const levels = {
+        "beginner": {"rows_number": "9", "cols_number": "9", "mines_number": "9"}, 
+        "intermediate": {"rows_number": "16", "cols_number": "16", "mines_number": "25"}, 
+        "expert": {"rows_number": "24", "cols_number": "24", "mines_number": "36"}, 
+    } as any;
 
     const handleSubmit = function(event: any) {
         event.preventDefault();
-        
-        let obj = {} as TypeCreateGame;
 
-        // Get input fields inserting to OBJ
-        for (const item of event.target){
-            obj[item["name"] as keyof TypeCreateGame] = item["value"]
-        }
+        let obj = {
+            ...levels[event.target.id]
+        } as TypeCreateGame;
 
         requestCreateNewGameCallback(obj);
     }
@@ -39,7 +37,6 @@ export default function HomeContainer(){
                 header: {
                     headers: {
                         'Content-Type': 'application/json',
-                        // 'Authorization': `Bearer ${cookies.user.access_token}`
                     }
                 },
                 bodyData: {
@@ -59,7 +56,6 @@ export default function HomeContainer(){
         })(obj);
     }, []);
 
-    // if (cookies && cookies.user) {
      return (
          <Fragment>
              <TopBarComponent>
@@ -71,9 +67,4 @@ export default function HomeContainer(){
              />
          </Fragment>
      )
-    // }
-    // else {
-    //     window.location.href = "/signin"
-    //     return (<Fragment></Fragment>)
-    // }
 }

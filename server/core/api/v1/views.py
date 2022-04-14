@@ -12,7 +12,7 @@ from rest_framework.exceptions import MethodNotAllowed, ValidationError
 
 from core.models import BoardModel, RowModel, SquareItemModel, User
 from core.api.v1.serializers import BoardSerializer, MineSweeperActionSerializer, UserSerializer
-from core.api.v1.service import MineSweeperAction
+from core.api.v1.manager import MineSweeperAction
 from core.api.v1.permissions import MineSweeperUpdatePermission
 
 

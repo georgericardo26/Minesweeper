@@ -1,6 +1,6 @@
 """
 Package: core
-Module : service.py
+Module : manager.py
 Author : George Ricardo
 
 This module has been created to handle query objects using business logics and returns result to view.
